@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cebu Trip · October 23–26, 2026</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Newsreader (Serif), Plus Jakarta Sans (Sans), JetBrains Mono (Monospace) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           DESIGN TOKENS — WARM EDITORIAL PAPER & INK
+           ========================================================================== */
+        :root {
+            --bg-paper: #F6F5F0;
+            --surface-card: #FFFFFF;
+            --surface-header: #FAF9F6;
+            --surface-hover: #FCFBF9;
+
+            --ink-primary: #141413;
+            --ink-secondary: #575653;
+            --ink-muted: #8A8884;
+
+            --border-hairline: #E4E2DC;
+
+            /* Semantic Category Tag Tints */
+            --food-text: #A63A1E;
+            --food-bg: #FDF3F0;
+            --food-border: #F5D6CE;
+
+            --exercise-text: #2A5C43;
+            --exercise-bg: #F1F7F4;
+            --exercise-border: #CCE3D7;
+
+            --entertainment-text: #946210;
+            --entertainment-bg: #FDF8EE;
+            --entertainment-border: #F0DFBE;
+
+            --logistics-text: #3B4A54;
+            --logistics-bg: #F3F5F7;
+            --logistics-border: #D7E0E6;
+        }
+
+        /* ==========================================================================
+           BASE & LAYOUT ARCHITECTURE
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            color: var(--ink-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .timetable-container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 48px 20px 64px;
+        }
+
+        /* ==========================================================================
+           PAGE TITLE HEADER
+           ========================================================================== */
+        .page-title-bar {
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-hairline);
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .page-title-bar h1 {
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--ink-primary);
+            line-height: 1.1;
+        }
+
+        .page-title-bar span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ==========================================================================
+           DAY CARD & HEADER
+           ========================================================================== */
+        .day-card {
+            border: 1px solid var(--border-hairline);
+            border-radius: 6px;
+            background: var(--surface-card);
+            margin-bottom: 24px;
+            box-shadow: 0 1px 2px rgba(20, 20, 19, 0.03);
+            overflow: hidden;
+        }
+
+        .day-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 18px 24px;
+            background: var(--surface-header);
+            border-bottom: 1px solid var(--border-hairline);
+        }
+
+        .date-box {
+            min-width: 52px;
+            padding: 6px 10px;
+            border: 1px solid var(--border-hairline);
+            border-radius: 4px;
+            background: var(--surface-card);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .date-box strong {
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 1.05;
+            color: var(--ink-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .date-box span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .day-title-group h3 {
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--ink-primary);
+            line-height: 1.25;
+        }
+
+        .day-title-group p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-muted);
+            margin-top: 3px;
+        }
+
+        /* ==========================================================================
+           SWISS TIMETABLE SCHEDULE GRID
+           ========================================================================== */
+        .schedule {
+            position: relative;
+        }
+
+        /* Vertical Swiss Grid Hairline separating Time and Activity columns */
+        .schedule::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 189px; /* 24px left padding + 165px time column */
+            width: 1px;
+            background-color: var(--border-hairline);
+            pointer-events: none;
+        }
+
+        .activity {
+            display: grid;
+            grid-template-columns: 165px 1fr;
+            column-gap: 24px;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-hairline);
+            transition: background-color 0.15s ease;
+            align-items: start;
+        }
+
+        .activity:last-child {
+            border-bottom: none;
+        }
+
+        .activity:hover {
+            background-color: var(--surface-hover);
+        }
+
+        .time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink-secondary);
+            font-variant-numeric: tabular-nums;
+            padding-right: 12px;
+            padding-top: 2px;
+        }
+
+        .activity-content {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .activity-text h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink-primary);
+            line-height: 1.35;
+        }
+
+        .activity-text p {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 400;
+            color: var(--ink-secondary);
+            margin-top: 3px;
+            line-height: 1.5;
+        }
+
+        /* ==========================================================================
+           SEMANTIC EDITORIAL TAGS
+           ========================================================================== */
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-top: 1px;
+            display: inline-block;
+        }
+
+        .tag-food {
+            color: var(--food-text);
+            background-color: var(--food-bg);
+            border-color: var(--food-border);
+        }
+
+        .tag-exercise {
+            color: var(--exercise-text);
+            background-color: var(--exercise-bg);
+            border-color: var(--exercise-border);
+        }
+
+        .tag-entertainment {
+            color: var(--entertainment-text);
+            background-color: var(--entertainment-bg);
+            border-color: var(--entertainment-border);
+        }
+
+        .tag-logistics {
+            color: var(--logistics-text);
+            background-color: var(--logistics-bg);
+            border-color: var(--logistics-border);
+        }
+
+        /* ==========================================================================
+           MOBILE RESPONSIVE (@media max-width: 600px)
+           ========================================================================== */
+        @media (max-width: 600px) {
+            .timetable-container {
+                padding: 32px 16px 48px;
+            }
+
+            .page-title-bar {
+                margin-bottom: 22px;
+                padding-bottom: 14px;
+            }
+
+            .page-title-bar h1 {
+                font-size: 28px;
+            }
+
+            .day-header {
+                padding: 15px 18px;
+                gap: 14px;
+            }
+
+            .day-title-group h3 {
+                font-size: 18px;
+            }
+
+            .schedule::before {
+                display: none;
+            }
+
+            .activity {
+                grid-template-columns: 1fr;
+                row-gap: 6px;
+                padding: 15px 18px;
+            }
+
+            .time {
+                padding-right: 0;
+                padding-top: 0;
+            }
+
+            .activity-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .tag {
+                margin-top: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="timetable-container">
+
+        <!-- Page Title Header -->
+        <div class="page-title-bar">
+            <h1>Cebu Trip</h1>
+            <span>OCT 23 – 26, 2026 · DAILY SCHEDULE</span>
+        </div>
+
+        <!-- 23 FRI — Arrival & IT Park Night Walk -->
+        <section class="day-card">
+            <div class="day-header">
+                <div class="date-box">
+                    <strong>23</strong>
+                    <span>FRI</span>
+                </div>
+                <div class="day-title-group">
+                    <h3>Arrival &amp; IT Park Night Walk</h3>
+                    <p>Friday, October 23 · Evening</p>
+                </div>
+            </div>
+
+            <div class="schedule">
+                <div class="activity">
+                    <div class="time">7:00 – 8:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Arrive at Cebu Port</h4>
+                            <p>Arrive in Cebu and prepare for the trip.</p>
+                        </div>
+                        <span class="tag tag-logistics">Arrival</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">8:00 – 9:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return to Boarding House</h4>
+                            <p>Leave your belongings and prepare to go out.</p>
+                        </div>
+                        <span class="tag tag-logistics">Preparation</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">9:00 PM – 12:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Sugbo Mercado &amp; IT Park</h4>
+                            <p>Try different foods at Sugbo Mercado and walk around IT Park.</p>
+                        </div>
+                        <span class="tag tag-food">Food &amp; Sightseeing</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">12:00 – 1:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return to Boarding House</h4>
+                            <p>Head back and get some rest.</p>
+                        </div>
+                        <span class="tag tag-logistics">Travel</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 24 SAT — Jogging, Ayala & Colon Night Market -->
+        <section class="day-card">
+            <div class="day-header">
+                <div class="date-box">
+                    <strong>24</strong>
+                    <span>SAT</span>
+                </div>
+                <div class="day-title-group">
+                    <h3>Jogging, Ayala &amp; Colon Night Market</h3>
+                    <p>Saturday, October 24 · Full Day</p>
+                </div>
+            </div>
+
+            <div class="schedule">
+                <div class="activity">
+                    <div class="time">5:30 – 7:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Morning Jogging</h4>
+                            <p>Start the day with a morning run.</p>
+                        </div>
+                        <span class="tag tag-exercise">Exercise</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">7:00 – 8:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Breakfast</h4>
+                            <p>Eat breakfast and recharge.</p>
+                        </div>
+                        <span class="tag tag-food">Food</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">10:00 AM – 1:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Ayala Center Cebu</h4>
+                            <p>Explore the mall, eat lunch and try Voltes.</p>
+                        </div>
+                        <span class="tag tag-food">Shopping &amp; Food</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">2:00 – 4:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Watch a Movie</h4>
+                            <p>Enjoy a movie at the cinema.</p>
+                        </div>
+                        <span class="tag tag-entertainment">Entertainment</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">5:00 – 7:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return &amp; Rest</h4>
+                            <p>Go back to the boarding house and relax.</p>
+                        </div>
+                        <span class="tag tag-logistics">Rest</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">7:00 – 10:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Colon Night Market</h4>
+                            <p>Explore the night market and try local food.</p>
+                        </div>
+                        <span class="tag tag-food">Food &amp; Shopping</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">10:00 – 11:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return to Boarding House</h4>
+                            <p>Travel back and rest for the night.</p>
+                        </div>
+                        <span class="tag tag-logistics">Travel</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 25 SUN — Jogging, SM City & IT Park -->
+        <section class="day-card">
+            <div class="day-header">
+                <div class="date-box">
+                    <strong>25</strong>
+                    <span>SUN</span>
+                </div>
+                <div class="day-title-group">
+                    <h3>Jogging, SM City &amp; IT Park</h3>
+                    <p>Sunday, October 25 · Full Day</p>
+                </div>
+            </div>
+
+            <div class="schedule">
+                <div class="activity">
+                    <div class="time">5:30 – 7:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Morning Jogging</h4>
+                            <p>Start the day with a morning run.</p>
+                        </div>
+                        <span class="tag tag-exercise">Exercise</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">7:00 – 8:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Breakfast</h4>
+                            <p>Eat breakfast and prepare for the day.</p>
+                        </div>
+                        <span class="tag tag-food">Food</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">10:00 AM – 1:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>SM City Cebu</h4>
+                            <p>Explore the mall, eat lunch and try Jafar's.</p>
+                        </div>
+                        <span class="tag tag-food">Shopping &amp; Food</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">2:00 – 4:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Watch a Movie</h4>
+                            <p>Enjoy another movie at the cinema.</p>
+                        </div>
+                        <span class="tag tag-entertainment">Entertainment</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">5:00 – 7:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return &amp; Rest</h4>
+                            <p>Return to the boarding house and relax.</p>
+                        </div>
+                        <span class="tag tag-logistics">Rest</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">7:00 – 10:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>IT Park &amp; Sandoni</h4>
+                            <p>Visit IT Park and try Sandoni.</p>
+                        </div>
+                        <span class="tag tag-food">Food &amp; Sightseeing</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">10:00 – 11:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return to Boarding House</h4>
+                            <p>Travel back and rest.</p>
+                        </div>
+                        <span class="tag tag-logistics">Travel</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 26 MON — Breakfast & Departure -->
+        <section class="day-card">
+            <div class="day-header">
+                <div class="date-box">
+                    <strong>26</strong>
+                    <span>MON</span>
+                </div>
+                <div class="day-title-group">
+                    <h3>Breakfast &amp; Departure</h3>
+                    <p>Monday, October 26 · Departure Day</p>
+                </div>
+            </div>
+
+            <div class="schedule">
+                <div class="activity">
+                    <div class="time">7:00 – 8:00 AM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Breakfast</h4>
+                            <p>Have breakfast before preparing to leave.</p>
+                        </div>
+                        <span class="tag tag-food">Food</span>
+                    </div>
+                </div>
+
+                <div class="activity">
+                    <div class="time">11:00 AM – 12:00 PM</div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <h4>Return to Cebu Port</h4>
+                            <p>Travel to the port for your departure.</p>
+                        </div>
+                        <span class="tag tag-logistics">Departure</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
